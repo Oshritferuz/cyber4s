@@ -1,0 +1,12 @@
+
+td{
+  vertical-align: middle;
+  text-align: center;
+  width: 60px;
+  height: 60px;
+  background-color: rgb(160, 154, 154);
+  outline:solid rgb(60, 58, 58) ;
+}
+.light-cell{
+  background-color: rgb(243, 243, 243);
+}
