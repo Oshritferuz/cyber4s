@@ -2,6 +2,64 @@ const BoardSize=8;
 let selectedCell;
 let table;
 
+function getBishopMoves(row,col){
+ for(let i=0;i<BoardSize;i++){
+    // back
+    drawCellsMove(+row+i,+col+i);
+    drawCellsMove(+row-i,+col-i);
+    drawCellsMove(+row+i,+col-i);
+    drawCellsMove(+row-i,+col+i);
+
+ }
+
+}
+
+function getQueenMoves(row,col){
+  getRookMoves(row,col);
+  getBishopMoves(row,col);
+}
+
+function getKingMoves(row,col){
+    drawCellsMove(+row+1,+col);
+    drawCellsMove(+row-1,+col);
+    drawCellsMove(+row+1,+col+1);
+    drawCellsMove(+row+1,+col-1);
+
+    drawCellsMove(+row,+col+1);
+    drawCellsMove(+row,+col-1);
+    drawCellsMove(+row-1,+col-1);
+    drawCellsMove(+row-1,+col+1);
+}
+
+function getRookMoves(row,col){
+  for (let i = 0; i < 8; i++) {
+
+    drawCellsMove(+row+i,+col);
+    drawCellsMove(+row-i,+col);
+    drawCellsMove(+row,+col+i);
+    drawCellsMove(+row,+col-i);
+   }
+ 
+}
+
+function getKnightMoves(row,col){
+  drawCellsMove(+row+2,+col+1);
+  drawCellsMove(+row+2,+col-1);
+  drawCellsMove(+row+1,+col+2);
+  drawCellsMove(+row+1,+col-2);
+  drawCellsMove(+row-2,+col+1);
+  drawCellsMove(+row-2,+col-1);
+  drawCellsMove(+row-1,+col+2);
+  drawCellsMove(+row-1,+col-2);
+  
+}
+
+class BoardData {
+  constructor(pieces) {
+    this.pieces = pieces;
+   
+  }
+}
 class Piece{
   constructor(color,Type,place,cell){
     this.color =color; 
@@ -9,6 +67,8 @@ class Piece{
     this.place=place
      this.image=  document.createElement("img")
     this.image.src=`./chesselement/${this.color} ${this.type}.png`
+    this.image.setAttribute('type',this.type);
+    this.image.setAttribute('color',this.color);
      cell.appendChild(this.image);
      this.cell=cell;
      
@@ -17,7 +77,7 @@ class Piece{
   }
 function checkPlace(coulmn){
   if(coulmn===1 || coulmn===6)
-  return "horse";
+  return "knight";
   else if(coulmn===2 || coulmn===5)
   return 'bishop';
   else if (coulmn===0 || coulmn===7)
@@ -27,50 +87,72 @@ function checkPlace(coulmn){
   else if (coulmn===4)
   return 'king';
 }
-function possiblemoves(pieceType,position){
-  rowPos=position[0]
-  columnPos=position[2]
-  if (pieceType==='<img src="./chesselement/black pawn.png">') {
-    (rowPos++)
-    let cellsmove =document.getElementById(String(rowPos)+` `+columnPos);
-    cellsmove.classList.add('cellsmove')
-    console.log(cellsmove)} 
-  else if (pieceType==='<img src="./chesselement/white pawn.png">') {
-    (rowPos--)
-    let cellsmove =document.getElementById(String(rowPos)+` `+columnPos);
+
+function pieceMoves(piece){
+  switch(piece){
+
+    
+  }
+}
+
+function drawCellsMove(rowPos,columnPos){
+  let cellsmove =document.getElementById(String(rowPos)+` `+columnPos);
+  if(cellsmove){
     cellsmove.classList.add('cellsmove')
   }
-  else if (pieceType==='<img src="./chesselement/black rook.png">'||
-  pieceType==='<img src="./chesselement/white rook.png">') {
-    for (let i = 0; i < 8; i++) {
-     rowPos=i;
-     let cellsmove =document.getElementById(String(rowPos)+` `+columnPos);
-     cellsmove.classList.add('cellsmove')
-    }
-    for (let j = 0; j < 8; j++) {
-     columnPos=j;
-     rowPos=position[0]
-     let cellsmove =document.getElementById(String(rowPos)+` `+columnPos);
-     cellsmove.classList.add('cellsmove')
-
-    // }}
-    // else if (pieceType==='<img src="./chesselement/white bishop.png">') {
-    //   if ((rowPos+columnPos)%2==0) {
-    //   let cellsmove =document.getElementById(String(rowPos)+` `+columnPos);
-    //   cellsmove.classList.add('cellsmove')
-    // }}
-  }}}
+ 
+}
 
 
+function possiblemoves(piece,position){
+  console.log(piece)
+  rowPos=position[0]
+  columnPos=position[2]
+  if (piece.type==='pawn' && piece.color==='black') {
+    (rowPos++)
+    drawCellsMove(rowPos,columnPos)
+    console.log(cellsmove)} 
+  else if (piece.type==='pawn' && piece.color==='white') {
+    (rowPos--)
+    drawCellsMove(rowPos,columnPos)
+  }
+  else if(piece.type ==='bishop'){
+    getBishopMoves(rowPos,columnPos)
+  }
+  else if(piece.type==='knight'){
+    getKnightMoves(rowPos,columnPos);
+  }
+  else if (piece.type==='rook') {
+    getRookMoves(rowPos,columnPos);
+   }
+   else if (piece.type==='king'){
+    getKingMoves(rowPos,columnPos);
+   } 
+   else if(piece.type==='queen'){
+     getQueenMoves(rowPos,columnPos);
+   }
+  }
+
+function removeAllMoves(){
+  document.querySelectorAll('table tr td.cellsmove').forEach((cell)=>{
+    cell.classList.remove('cellsmove');
+});
+}
 function onCellClick(event) {
+  removeAllMoves();
   if (selectedCell !== undefined) {
     selectedCell.classList.remove('selected');  
   }
   selectedCell = event.currentTarget;
   selectedCell.classList.add('selected');
-  let pieceType=selectedCell.innerHTML
-  let position=(selectedCell.id)    
-  possiblemoves(pieceType,position)
+  let pieceType=selectedCell.firstChild.getAttribute('type')
+  let color =selectedCell.firstChild.getAttribute('color')
+  let piece = {
+    type:pieceType,
+    color:color
+  }
+  let position=(selectedCell.id)
+  possiblemoves(piece,position)
 }
 
 
