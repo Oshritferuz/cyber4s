@@ -57,7 +57,7 @@ class BoardData {
   initPieces() {
     let index = 0
     for (let i = 0; i < 8; i++) {
-      this.pieces.push(new Piece('white', this.checkPlace(i), 3, i, index))
+      this.pieces.push(new Piece('white', this.checkPlace(i), 7, i, index))
       index++
       this.pieces.push(new Piece('black', this.checkPlace(i), 0, i, index))
       index++
