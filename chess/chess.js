@@ -79,33 +79,30 @@ class BoardData {
       7: 'rook',
       3: 'queen',
       4: 'king'
-    }
+    };
     return placeObj[column]
   }
-
-
   getPiece(row, col) {
-    let res = this.pieces.filter(cell => cell.row == row && cell.col == col)[0]
-
+    let res = this.pieces.filter(cell => cell.row == row && cell.col == col)[0];
     return res
   }
 }
 class Piece {
   constructor(color, type, row, col, index) {
     this.color = color;
-    this.type = type
+    this.type = type;
     this.col = col;
-    this.row = row
+    this.row = row;
     this.index = index;
-    this.initPiece()
+    this.initPiece();
   }
 
   initPiece() {
-    this.image = document.createElement("img")
-    this.image.src = `./chesselement/${this.color} ${this.type}.png`
+    this.image = document.createElement("img");
+    this.image.src = `./chesselement/${this.color} ${this.type}.png`;
     this.image.setAttribute('type', this.type);
     this.image.setAttribute('color', this.color);
-    let cell = table.rows[this.row].cells[this.col]
+    let cell = table.rows[this.row].cells[this.col];
     cell.appendChild(this.image);
   }
   getPossibleMoves() {
@@ -279,7 +276,7 @@ function drawCellsMove(row, col) {
   }
 }
 function possiblemoves(piece, position) {
-  console.log(piece)
+  // console.log(piece)
   rowPos = position[0]
   columnPos = position[2]
   if (piece.type === 'pawn' && piece.color === 'black') {
@@ -310,6 +307,7 @@ function possiblemoves(piece, position) {
   }
 }
 function removeAllMoves() {
+  // console.log(document.querySelectorAll('table tr td.cellsmove'))
   document.querySelectorAll('table tr td.cellsmove').forEach((cell) => {
     cell.classList.remove('cellsmove');
   })
@@ -317,26 +315,43 @@ function removeAllMoves() {
 // function actuallyMove() {
 //   if onCellClick 
 
-//  }
+// removeAllMoves();
+
 function onCellClick(event) {
-  removeAllMoves();
+
+  let target = event.currentTarget
+
   if (selectedCell !== undefined) {
     selectedCell.classList.remove('selected');
-
   }
-  // if (selectedCell !== undefined && cellsmove !== selectedCell) {
-  //   console.log(`djf`);
+  if (event.currentTarget.classList.contains(`cellsmove`)) {
+    target.innerHTML = selectedCell.innerHTML;
+    selectedCell.innerHTML = " "
+  }
+  if (event.currentTarget.tagName === "TD") {
+    selectedCell = target;
+  }
+  removeAllMoves();
+  //   selectedCell.innerHTML === event.currentTarget.innerHTML
+  // selectedCell.innerHTML === null
   // }
+  //  if (selectedCell !== undefined && selectedCell ===cellsmove ) {
+  //    console.log(`djf`);
+  //  }
 
-  selectedCell = event.currentTarget;
+  // console.log("selected cell:", selectedCell);
+  // console.log("what i clicked:", event.currentTarget.classList.contains(`cellsmove`));
+  // console.log("what i clicked:", event.target);
+
   selectedCell.classList.add('selected');
   let position = (selectedCell.id)
   let row = Number(position.split(' ')[0])
   let col = Number(position.split(' ')[1])
   let piece = boardData.getPiece(row, col)
-  let moves = piece.getPossibleMoves()
-  moves.forEach(move => drawCellsMove(move.row, move.col))
-
+  if (piece !== undefined) {
+    let moves = piece.getPossibleMoves()
+    moves.forEach(move => drawCellsMove(move.row, move.col))
+  }
 
 }
 
