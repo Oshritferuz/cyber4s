@@ -66,8 +66,17 @@ class BoardData {
       this.pieces.push(new Piece('black', 'pawn', 1, i, index))
       index++
     }
-
   }
+  movePiece(tarRow, tarCol, lastrow, lastcol) {
+    for (let i = 0; i < this.pieces.length; i++) {
+      const piece = this.pieces[i];
+      if (piece.col === lastcol && piece.row === lastrow) {
+        piece.row = tarRow;
+        piece.col = tarCol;
+      }
+    }
+  }
+
 
   checkPlace(column) {
     const placeObj = {
@@ -275,37 +284,6 @@ function drawCellsMove(row, col) {
     cellsmove.classList.add('cellsmove')
   }
 }
-function possiblemoves(piece, position) {
-  // console.log(piece)
-  rowPos = position[0]
-  columnPos = position[2]
-  if (piece.type === 'pawn' && piece.color === 'black') {
-    (rowPos++)
-    drawCellsMove(rowPos, columnPos)
-  }
-  else if (piece.type === 'pawn' && piece.color === 'white') {
-    (rowPos--)
-    drawCellsMove(rowPos, columnPos)
-  }
-  else if (piece.type === 'bishop') {
-    getBishopMoves(rowPos, columnPos)
-  }
-  else if (piece.type === 'knight') {
-    getKnightMoves(rowPos, columnPos);
-  }
-  else if (piece.type === 'rook') {
-    getRookMoves(rowPos, columnPos);
-  }
-  else if (piece.type === 'king') {
-    getKingMoves(rowPos, columnPos);
-  }
-  else if (piece.type === 'queen') {
-    getQueenMoves(rowPos, columnPos);
-  }
-  else {
-    console.log("Unknown type", type)
-  }
-}
 function removeAllMoves() {
   // console.log(document.querySelectorAll('table tr td.cellsmove'))
   document.querySelectorAll('table tr td.cellsmove').forEach((cell) => {
@@ -323,11 +301,21 @@ function onCellClick(event) {
 
   if (selectedCell !== undefined) {
     selectedCell.classList.remove('selected');
+
+
   }
   if (event.currentTarget.classList.contains(`cellsmove`)) {
     target.innerHTML = selectedCell.innerHTML;
-    selectedCell.innerHTML = " "
+    selectedCell.innerHTML = " ";
+    let position = (selectedCell.id);
+    let lastrow = Number(position.split(' ')[0]);
+    let lastcol = Number(position.split(' ')[1]);
+    let tarRow = (event.currentTarget.id[0]);
+    let tarCol = (event.currentTarget.id[2]);
+    // boardData.movePiece(tarRow, tarCol, lastrow, lastcol);
+    console.log("gg");
   }
+
   if (event.currentTarget.tagName === "TD") {
     selectedCell = target;
   }
