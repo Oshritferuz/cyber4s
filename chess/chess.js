@@ -53,7 +53,14 @@ class BoardData {
     this.initPieces()
 
   }
-
+  removePiece(row, col) {
+    for (let i = 0; i < this.pieces.length; i++) {
+      let piece = this.pieces[i];
+      if (piece.row === row && piece.col === col) {
+        this.pieces.splice(i, 1);
+      }
+    }
+  }
   initPieces() {
     let index = 0
     for (let i = 0; i < 8; i++) {
@@ -67,6 +74,7 @@ class BoardData {
       index++
     }
   }
+
   movePiece(tarRow, tarCol, lastrow, lastcol) {
     for (let i = 0; i < this.pieces.length; i++) {
       const piece = this.pieces[i];
@@ -294,43 +302,29 @@ function removeAllMoves() {
 //   if onCellClick 
 
 // removeAllMoves();
-
 function onCellClick(event) {
-
   let target = event.currentTarget
-
   if (selectedCell !== undefined) {
+
     selectedCell.classList.remove('selected');
-
-
   }
   if (event.currentTarget.classList.contains(`cellsmove`)) {
+    console.log(`hfh`)
     target.innerHTML = selectedCell.innerHTML;
     selectedCell.innerHTML = " ";
     let position = (selectedCell.id);
     let lastrow = Number(position.split(' ')[0]);
     let lastcol = Number(position.split(' ')[1]);
-    let tarRow = (event.currentTarget.id[0]);
-    let tarCol = (event.currentTarget.id[2]);
-    // boardData.movePiece(tarRow, tarCol, lastrow, lastcol);
-    console.log("gg");
-  }
+    let tarRow = Number(event.currentTarget.id[0]);
+    let tarCol = Number(event.currentTarget.id[2]);
+    boardData.removePiece(tarRow, tarCol);
+    boardData.movePiece(tarRow, tarCol, lastrow, lastcol);
 
+  }
   if (event.currentTarget.tagName === "TD") {
     selectedCell = target;
   }
   removeAllMoves();
-  //   selectedCell.innerHTML === event.currentTarget.innerHTML
-  // selectedCell.innerHTML === null
-  // }
-  //  if (selectedCell !== undefined && selectedCell ===cellsmove ) {
-  //    console.log(`djf`);
-  //  }
-
-  // console.log("selected cell:", selectedCell);
-  // console.log("what i clicked:", event.currentTarget.classList.contains(`cellsmove`));
-  // console.log("what i clicked:", event.target);
-
   selectedCell.classList.add('selected');
   let position = (selectedCell.id)
   let row = Number(position.split(' ')[0])
@@ -339,6 +333,7 @@ function onCellClick(event) {
   if (piece !== undefined) {
     let moves = piece.getPossibleMoves()
     moves.forEach(move => drawCellsMove(move.row, move.col))
+
   }
 
 }
