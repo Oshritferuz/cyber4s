@@ -20,3 +20,13 @@ td {
 .cellsmove {
   background: rgb(117, 158, 168);
 }
+.table{
+  justify-self: center;
+}
+
+.table1 {
+  margin: 0 auto;
+  margin-top: 20px;
+  border: 20px solid rgb(50, 80, 80);
+  /* border-collapse: collapse; */
+}

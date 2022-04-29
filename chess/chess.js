@@ -298,14 +298,10 @@ function removeAllMoves() {
     cell.classList.remove('cellsmove');
   })
 }
-// function actuallyMove() {
-//   if onCellClick 
 
-// removeAllMoves();
 function onCellClick(event) {
   let target = event.currentTarget
   if (selectedCell !== undefined) {
-
     selectedCell.classList.remove('selected');
   }
   if (event.currentTarget.classList.contains(`cellsmove`)) {
@@ -319,7 +315,7 @@ function onCellClick(event) {
     let tarCol = Number(event.currentTarget.id[2]);
     boardData.removePiece(tarRow, tarCol);
     boardData.movePiece(tarRow, tarCol, lastrow, lastcol);
-
+    removeAllMoves();
   }
   if (event.currentTarget.tagName === "TD") {
     selectedCell = target;
@@ -333,9 +329,7 @@ function onCellClick(event) {
   if (piece !== undefined) {
     let moves = piece.getPossibleMoves()
     moves.forEach(move => drawCellsMove(move.row, move.col))
-
   }
-
 }
 
 function checkPieceWhite(column, cell) {
