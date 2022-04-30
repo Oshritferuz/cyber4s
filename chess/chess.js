@@ -2,7 +2,7 @@ const BoardSize = 8;
 let selectedCell;
 let table;
 let boardData = null
-
+//get all moves for each player type
 function getBishopMoves(row, col) {
   for (let i = 0; i < BoardSize; i++) {
     // back
@@ -53,6 +53,7 @@ class BoardData {
     this.initPieces()
 
   }
+  //loop that `run` on each player for remove him from their cell.
   removePiece(row, col) {
     for (let i = 0; i < this.pieces.length; i++) {
       let piece = this.pieces[i];
@@ -61,6 +62,7 @@ class BoardData {
       }
     }
   }
+  //place the players on their places
   initPieces() {
     let index = 0
     for (let i = 0; i < 8; i++) {
@@ -74,7 +76,7 @@ class BoardData {
       index++
     }
   }
-
+  //function for `moving` the player- the loop `runs` on all of them
   movePiece(tarRow, tarCol, lastrow, lastcol) {
     for (let i = 0; i < this.pieces.length; i++) {
       const piece = this.pieces[i];
@@ -85,7 +87,7 @@ class BoardData {
     }
   }
 
-
+  //placed the player
   checkPlace(column) {
     const placeObj = {
       1: 'knight',
@@ -122,6 +124,7 @@ class Piece {
     let cell = table.rows[this.row].cells[this.col];
     cell.appendChild(this.image);
   }
+  //`tag` the player by their moving opptions
   getPossibleMoves() {
     const funcObj = {
       pawn: 'pawnMove',
@@ -286,6 +289,7 @@ class Piece {
     return row >= 0 && row <= 7 && col >= 0 && col <= 7
   }
 }
+//actually `connect` between the ID element and the possible moves folr css also
 function drawCellsMove(row, col) {
   let cellsmove = document.getElementById(String(row + ` ` + col));
   if (cellsmove && cellsmove !== selectedCell) {
@@ -298,9 +302,11 @@ function removeAllMoves() {
     cell.classList.remove('cellsmove');
   })
 }
-
+//the possible options that happend while you clicking on cells
 function onCellClick(event) {
+  console.log(selectedCell);
   let target = event.currentTarget
+  console.log(target)
   if (selectedCell !== undefined) {
     selectedCell.classList.remove('selected');
   }
@@ -315,7 +321,7 @@ function onCellClick(event) {
     let tarCol = Number(event.currentTarget.id[2]);
     boardData.removePiece(tarRow, tarCol);
     boardData.movePiece(tarRow, tarCol, lastrow, lastcol);
-    removeAllMoves();
+    selectedCell.classList.remove('cellsmove');
   }
   if (event.currentTarget.tagName === "TD") {
     selectedCell = target;
@@ -331,7 +337,7 @@ function onCellClick(event) {
     moves.forEach(move => drawCellsMove(move.row, move.col))
   }
 }
-
+//place the white and the black players on their rows
 function checkPieceWhite(column, cell) {
   const type = checkPlace(column)
   new Piece("white", type, [7, column], cell);
